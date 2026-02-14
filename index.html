@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JINNYYYYY</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: 150% 150%;
+            background-repeat: no-repeat;
+            animation: glowingAurora 25s infinite alternate ease-in-out;
+        }
+        @keyframes glowingAurora {
+            0% {
+                background-position: 0% 50%;
+                filter: hue-rotate(0deg) brightness(1);
+            }
+            50% {
+                filter: hue-rotate(20deg) brightness(1.2);
+            }
+            100% {
+                background-position: 100% 50%;
+                filter: hue-rotate(-10deg) brightness(0.9);
+            }
+        }
+        .container {
+            display: flex;
+            gap: 40px;
+            padding: 30px;
+            border-radius: 20px;
+        }
+        .btn {
+            font-size: 80px;
+            width: 180px;
+            height: 180px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: all 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(0,0,0,0.1));
+        }
+        .btn:active {
+            transform: scale(0.9);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .btn-wrong {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-wrong:hover {
+            background-color: #c0392b;
+        }
+        .btn-correct {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .btn-correct:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <button id="wrongBtn" class="btn btn-wrong">❌</button>
+        <button id="correctBtn" class="btn btn-correct">✔️</button>
+    </div>
+
+    <script>
+        const wrongSound = new Audio('Wrong.mp3');
+        const correctSound = new Audio('Correct.mp3');
+
+        function playWrong() {
+            wrongSound.currentTime = 0; 
+            wrongSound.play();
+        }
+
+        function playCorrect() {
+            correctSound.currentTime = 0; 
+            correctSound.play();
+        }
+
+        document.getElementById('wrongBtn').addEventListener('click', playWrong);
+        document.getElementById('correctBtn').addEventListener('click', playCorrect);
+    </script>
+
+</body>
+</html>
