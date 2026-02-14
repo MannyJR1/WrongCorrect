@@ -16,6 +16,7 @@
             background-size: 150% 150%;
             background-repeat: no-repeat;
             animation: glowingAurora 25s infinite alternate ease-in-out;
+            overflow: hidden;
         }
         @keyframes glowingAurora {
             0% {
@@ -35,6 +36,7 @@
             gap: 40px;
             padding: 30px;
             border-radius: 20px;
+            z-index: 10;
         }
         .btn {
             font-size: 80px;
@@ -68,9 +70,45 @@
         .btn-correct:hover {
             background-color: #27ae60;
         }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+        }
+        .overlay.active-wrong {
+            background-color: rgba(231, 76, 60, 0.9);
+            opacity: 1;
+        }
+        .overlay.active-correct {
+            background-color: rgba(46, 204, 113, 0.9);
+            opacity: 1;
+        }
+        #overlayIcon {
+            font-size: 350px;
+            transform: scale(0.2);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .overlay.active-wrong #overlayIcon,
+        .overlay.active-correct #overlayIcon {
+            transform: scale(1);
+        }
     </style>
 </head>
 <body>
+
+    <div class="overlay" id="overlay">
+        <div id="overlayIcon"></div>
+    </div>
 
     <div class="container">
         <button id="wrongBtn" class="btn btn-wrong">❌</button>
@@ -80,15 +118,40 @@
     <script>
         const wrongSound = new Audio('Wrong.mp3');
         const correctSound = new Audio('Correct.mp3');
+        let overlayTimeout;
+
+        function showOverlay(type, icon) {
+            const overlay = document.getElementById('overlay');
+            const overlayIcon = document.getElementById('overlayIcon');
+            
+            clearTimeout(overlayTimeout);
+            
+            overlay.className = 'overlay';
+            overlayIcon.innerText = icon;
+            
+            requestAnimationFrame(() => {
+                if (type === 'wrong') {
+                    overlay.classList.add('active-wrong');
+                } else {
+                    overlay.classList.add('active-correct');
+                }
+            });
+
+            overlayTimeout = setTimeout(() => {
+                overlay.classList.remove('active-wrong', 'active-correct');
+            }, 800);
+        }
 
         function playWrong() {
             wrongSound.currentTime = 0; 
             wrongSound.play();
+            showOverlay('wrong', '❌');
         }
 
         function playCorrect() {
             correctSound.currentTime = 0; 
             correctSound.play();
+            showOverlay('correct', '✔️');
         }
 
         document.getElementById('wrongBtn').addEventListener('click', playWrong);
