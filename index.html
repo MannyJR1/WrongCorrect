@@ -5,35 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JINNYYYYY</title>
     <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; 
-            min-height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Itim', sans-serif;
             background-image: url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-            background-size: 150% 150%;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             background-repeat: no-repeat;
             animation: glowingAurora 25s infinite alternate ease-in-out;
-            overflow: hidden;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         @keyframes glowingAurora {
-            0% { background-position: 0% 50%; filter: hue-rotate(0deg) brightness(1); }
+            0% { filter: hue-rotate(0deg) brightness(1); }
             50% { filter: hue-rotate(20deg) brightness(1.2); }
-            100% { background-position: 100% 50%; filter: hue-rotate(-10deg) brightness(0.9); }
+            100% { filter: hue-rotate(-10deg) brightness(0.9); }
         }
-        .game-wrapper {
+        .nav-btn {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            background: rgba(20, 20, 30, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            font-family: 'Itim', sans-serif;
+            z-index: 1000;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+        }
+        .section-view {
+            width: 100vw;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 50px;
-            z-index: 10;
-            margin-top: 60px; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 0.3s ease;
+            padding-bottom: 120px;
+            box-sizing: border-box;
+        }
+        #gameSection {
+            justify-content: flex-start;
+            padding-top: 80px;
+        }
+        #timerSection {
+            justify-content: center;
+            display: none;
+            padding-top: 80px;
         }
         .title {
-            font-family: 'Itim', 'Tahoma', sans-serif;
             color: white;
             text-shadow: 
                 -4px -4px 0 #000,  
@@ -45,52 +85,46 @@
                  0px -4px 0 #000,
                  0px  4px 0 #000,
                  0px 10px 15px rgba(0,0,0,0.6);
-            margin: 0;
+            margin: 0 0 50px 0;
             line-height: 1.2;
             font-weight: bold;
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 10;
         }
         .title-top {
             font-size: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            /* ลบ gap ออก เพราะเราจะใช้ wrapper คุมระยะห่างแทน */
             gap: 0; 
         }
         .title-bottom {
             font-size: 110px;
+            text-align: center;
         }
-        
-        /* --- ส่วนที่เพิ่มใหม่: กล่องครอบไอคอน --- */
         .icon-wrapper {
-            /* กำหนดความกว้างให้เท่ากันทั้งซ้ายและขวา */
             width: 140px; 
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         .icon-img {
             height: 90px;
             width: auto;
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6));
-            /* ลบ transform: translateY ออกเพื่อให้จัดกึ่งกลางง่ายขึ้น */
         }
         .icon-controller {
-            /* ปรับขนาดจอยให้ดูสมดุลกับถ้วยรางวัล */
             height: 80px; 
             transform: rotate(-15deg);
-            /* ลบ margin-right ออกเพราะมี wrapper แล้ว */
         }
-        
         .container {
             display: flex;
             gap: 40px;
             padding: 20px;
             border-radius: 20px;
+            z-index: 10;
         }
         .btn {
             font-size: 80px;
@@ -138,23 +172,471 @@
         }
         .overlay.active-wrong #overlayIcon,
         .overlay.active-correct #overlayIcon { transform: scale(1); }
+
+        .timer-card {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        .timer-title {
+            margin: 0 0 20px 0;
+            font-size: 32px;
+            color: #fff;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        #timerSetupView {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .time-inputs-container {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0 50px 0;
+            justify-content: center;
+        }
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .time-input-group input {
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+            color: #29b6f6;
+            font-size: 80px;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            width: 100px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .time-input-group input:focus {
+            border-bottom-color: #29b6f6;
+        }
+        .time-input-group input::-webkit-outer-spin-button,
+        .time-input-group input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .time-input-group span {
+            font-size: 20px;
+            color: rgba(255,255,255,0.7);
+        }
+        .btn-start-setup {
+            background: #29b6f6;
+            color: #000;
+            border: none;
+            padding: 15px 50px;
+            font-size: 28px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-family: 'Itim', sans-serif;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+        .btn-start-setup:hover {
+            transform: scale(1.05);
+        }
+
+        #timerRunningView {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .circle-container {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            margin-bottom: 30px;
+            max-width: 100%;
+        }
+        .circle-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 12;
+        }
+        .circle-progress {
+            fill: none;
+            stroke: #29b6f6;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .circle-inner-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .inner-label {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .inner-time {
+            font-size: 75px;
+            font-family: 'Arial', sans-serif;
+            color: #29b6f6;
+            font-weight: normal;
+            line-height: 1;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .linear-progress-container {
+            width: 80%;
+            height: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .linear-progress-bar {
+            height: 100%;
+            background: #29b6f6;
+            width: 0%;
+            transition: width 1s linear;
+            border-radius: 6px;
+        }
+        .linear-progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: -2px;
+            font-size: 12px;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .action-controls {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .timer-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 20px;
+            font-size: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Itim', sans-serif;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 100px;
+            max-width: 150px;
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+        .btn-pause { border-bottom: 3px solid #f39c12; }
+        .btn-pause:hover { background: rgba(243, 156, 18, 0.2); }
+        .btn-restart { border-bottom: 3px solid #3498db; }
+        .btn-restart:hover { background: rgba(52, 152, 219, 0.2); }
+        .btn-stop { border-bottom: 3px solid #e74c3c; }
+        .btn-stop:hover { background: rgba(231, 76, 60, 0.2); }
+        .timer-btn:active { transform: scale(0.95); }
+
+        .time-up-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(231, 76, 60, 0.4);
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            animation: flash 1s infinite alternate;
+            display: none;
+        }
+
+        .music-player {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 220px;
+            background: rgba(20, 20, 30, 0.75);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 15px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            font-family: 'Itim', sans-serif;
+            transition: all 0.3s ease;
+        }
+        #trackInfo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        #trackInfo:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #trackName {
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        #playlistToggle {
+            font-size: 14px;
+            transition: transform 0.3s;
+            color: rgba(255,255,255,0.7);
+        }
+        .music-player.show-playlist #playlistToggle {
+            transform: rotate(180deg);
+        }
+        #playlist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 0; 
+            overflow-y: auto;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        }
+        .music-player.show-playlist #playlist {
+            max-height: 150px; 
+            margin-top: 5px;
+            padding: 5px;
+        }
+        #playlist li {
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
+        }
+        #playlist li:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        #playlist li.active {
+            background: rgba(46, 204, 113, 0.25);
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        #playlist li i {
+            margin-right: 8px;
+            font-size: 12px;
+            opacity: 0; 
+            transition: opacity 0.2s;
+        }
+        #playlist li.active i {
+            opacity: 1; 
+        }
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+        .music-btns {
+            display: flex;
+            gap: 15px;
+        }
+        .music-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .music-btn:hover {
+            color: white;
+            transform: scale(1.1);
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        #playPauseBtn {
+            font-size: 28px; 
+            color: white;
+        }
+        #volumeSlider {
+            -webkit-appearance: none;
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+        #volumeSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #2ecc71;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
+            transition: transform 0.1s;
+        }
+        #volumeSlider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .nav-btn {
+                top: 15px;
+                left: 15px;
+                font-size: 16px;
+                padding: 10px 15px;
+            }
+            .title {
+                margin: 0 0 30px 0;
+            }
+            .title-top {
+                font-size: 45px;
+            }
+            .title-bottom {
+                font-size: 60px;
+            }
+            .icon-wrapper {
+                width: 70px;
+            }
+            .icon-img {
+                height: 50px;
+            }
+            .icon-controller {
+                height: 40px;
+            }
+            .container {
+                gap: 20px;
+                padding: 10px;
+            }
+            .btn {
+                width: 130px;
+                height: 130px;
+                font-size: 55px;
+                border-radius: 25px;
+            }
+            .timer-card {
+                padding: 25px 15px;
+            }
+            .time-inputs-container {
+                gap: 15px;
+                margin: 20px 0 30px 0;
+            }
+            .time-input-group input {
+                font-size: 50px;
+                width: 65px;
+            }
+            .time-input-group span {
+                font-size: 16px;
+            }
+            .btn-start-setup {
+                font-size: 22px;
+                padding: 12px 35px;
+            }
+            .circle-container {
+                width: 250px;
+                height: 250px;
+                margin-bottom: 20px;
+            }
+            .inner-time {
+                font-size: 50px;
+            }
+            .inner-label {
+                font-size: 18px;
+            }
+            .timer-btn {
+                font-size: 16px;
+                padding: 10px;
+            }
+            .music-player {
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 15px;
+                right: auto;
+                width: 90%;
+                max-width: 320px;
+            }
+            #overlayIcon {
+                font-size: 200px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .title-top { font-size: 35px; }
+            .title-bottom { font-size: 45px; }
+            .btn { width: 110px; height: 110px; font-size: 45px; }
+            .circle-container { width: 220px; height: 220px; }
+            .inner-time { font-size: 40px; }
+        }
     </style>
 </head>
 <body>
 
+    <button id="navBtn" class="nav-btn">
+        <i class="fa-solid fa-stopwatch"></i> ไปหน้าจับเวลา
+    </button>
+
     <div class="overlay" id="overlay">
         <div id="overlayIcon"></div>
     </div>
-
-    <div class="game-wrapper">
+    
+    <div id="gameSection" class="section-view">
         <h1 class="title">
             <div class="title-top">
                 <div class="icon-wrapper">
                     <img src="controller.png" class="icon-img icon-controller" alt="Controller">
                 </div>
-                
                 เกม 
-                
                 <div class="icon-wrapper">
                     <img src="trophy.png" class="icon-img" alt="Trophy">
                 </div>
@@ -170,7 +652,100 @@
         </div>
     </div>
 
+    <div id="timerSection" class="section-view">
+        <div class="time-up-overlay" id="timeUpOverlay"></div>
+        <div class="timer-card">
+            
+            <div id="timerSetupView">
+                <h1 class="timer-title">ตั้งเวลา</h1>
+                <div class="time-inputs-container">
+                    <div class="time-input-group">
+                        <input type="number" id="inputHours" min="0" max="99" value="00" onblur="padZero(this)">
+                        <span>ชั่วโมง</span>
+                    </div>
+                    <div class="time-input-group">
+                        <input type="number" id="inputMinutes" min="0" max="59" value="05" onblur="padZero(this)">
+                        <span>นาที</span>
+                    </div>
+                    <div class="time-input-group">
+                        <input type="number" id="inputSeconds" min="0" max="59" value="00" onblur="padZero(this)">
+                        <span>วินาที</span>
+                    </div>
+                </div>
+                <button class="btn-start-setup" onclick="startCountdown()">เริ่มจับเวลา</button>
+            </div>
+
+            <div id="timerRunningView">
+                <h1 class="timer-title">นาฬิกาจับเวลาถอยหลัง</h1>
+                
+                <div class="circle-container">
+                    <svg class="circle-svg" viewBox="0 0 320 320">
+                        <circle class="circle-bg" cx="160" cy="160" r="140"></circle>
+                        <circle class="circle-progress" id="circleProgress" cx="160" cy="160" r="140" stroke-dasharray="879.64" stroke-dashoffset="0"></circle>
+                    </svg>
+                    <div class="circle-inner-text">
+                        <div class="inner-label" id="timerStatusLabel">จับเวลา</div>
+                        <div class="inner-time" id="countdownDisplay">00:00:00</div>
+                    </div>
+                </div>
+
+                <div class="linear-progress-container">
+                    <div class="linear-progress-bar" id="linearProgress"></div>
+                    <div class="linear-progress-text" id="percentText">0%</div>
+                </div>
+
+                <div class="action-controls">
+                    <button class="timer-btn btn-pause" id="pauseBtn" onclick="togglePause()">หยุดชั่วคราว</button>
+                    <button class="timer-btn btn-restart" onclick="restartCountdown()">เริ่มต้นใหม่</button>
+                    <button class="timer-btn btn-stop" onclick="stopCountdown()">หยุด</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="music-player" id="musicPlayer">
+        <div id="trackInfo">
+            <i class="fa-solid fa-music" style="margin-right: 8px; color: #2ecc71;"></i>
+            <span id="trackName">Chill</span>
+            <i class="fa-solid fa-chevron-down" id="playlistToggle"></i>
+        </div>
+        
+        <ul id="playlist">
+        </ul>
+
+        <div class="player-controls">
+            <div class="music-btns">
+                <button id="playPauseBtn" class="music-btn"><i class="fa-solid fa-play"></i></button>
+                <button id="nextBtn" class="music-btn"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-volume-high" style="font-size: 14px; color: rgba(255,255,255,0.6);"></i>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.3">
+            </div>
+        </div>
+    </div>
+
     <script>
+        const gameSection = document.getElementById('gameSection');
+        const timerSection = document.getElementById('timerSection');
+        const navBtn = document.getElementById('navBtn');
+        let currentView = 'game';
+
+        navBtn.addEventListener('click', () => {
+            if (currentView === 'game') {
+                gameSection.style.display = 'none';
+                timerSection.style.display = 'flex';
+                navBtn.innerHTML = '<i class="fa-solid fa-gamepad"></i> กลับหน้าเกม';
+                currentView = 'timer';
+            } else {
+                gameSection.style.display = 'flex';
+                timerSection.style.display = 'none';
+                navBtn.innerHTML = '<i class="fa-solid fa-stopwatch"></i> ไปหน้าจับเวลา';
+                currentView = 'game';
+            }
+        });
+
         const wrongSound = new Audio('Wrong.mp3');
         const correctSound = new Audio('Correct.mp3');
         let overlayTimeout;
@@ -211,6 +786,208 @@
 
         document.getElementById('wrongBtn').addEventListener('click', playWrong);
         document.getElementById('correctBtn').addEventListener('click', playCorrect);
+
+        function padZero(input) {
+            let val = parseInt(input.value);
+            if (isNaN(val) || val < 0) val = 0;
+            input.value = String(val).padStart(2, '0');
+        }
+
+        let totalSeconds = 0;
+        let remainingSeconds = 0;
+        let countdownInterval = null;
+        let isPaused = false;
+        const circumference = 879.64; 
+
+        const setupView = document.getElementById('timerSetupView');
+        const runningView = document.getElementById('timerRunningView');
+        const circleProgress = document.getElementById('circleProgress');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        const linearProgress = document.getElementById('linearProgress');
+        const percentText = document.getElementById('percentText');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const statusLabel = document.getElementById('timerStatusLabel');
+        const timeUpOverlay = document.getElementById('timeUpOverlay');
+
+        function startCountdown() {
+            const h = parseInt(document.getElementById('inputHours').value) || 0;
+            const m = parseInt(document.getElementById('inputMinutes').value) || 0;
+            const s = parseInt(document.getElementById('inputSeconds').value) || 0;
+            
+            totalSeconds = (h * 3600) + (m * 60) + s;
+            
+            if (totalSeconds <= 0) return;
+
+            remainingSeconds = totalSeconds;
+            isPaused = false;
+            
+            setupView.style.display = 'none';
+            runningView.style.display = 'flex';
+            timeUpOverlay.style.display = 'none';
+            pauseBtn.innerText = "หยุดชั่วคราว";
+            statusLabel.innerText = "จับเวลา";
+
+            updateCountdownUI();
+            
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(tick, 1000);
+        }
+
+        function updateCountdownUI() {
+            const h = Math.floor(remainingSeconds / 3600);
+            const m = Math.floor((remainingSeconds % 3600) / 60);
+            const s = remainingSeconds % 60;
+            
+            countdownDisplay.innerText = 
+                String(h).padStart(2, '0') + ':' + 
+                String(m).padStart(2, '0') + ':' + 
+                String(s).padStart(2, '0');
+
+            const percentRemaining = totalSeconds > 0 ? (remainingSeconds / totalSeconds) : 0;
+            const offset = circumference - (percentRemaining * circumference);
+            circleProgress.style.strokeDashoffset = offset;
+
+            const passedSeconds = totalSeconds - remainingSeconds;
+            const percentPassed = totalSeconds > 0 ? (passedSeconds / totalSeconds) : 0;
+            const percent100 = Math.min(100, Math.round(percentPassed * 100));
+            
+            linearProgress.style.width = percent100 + '%';
+            percentText.innerText = percent100 + '%';
+        }
+
+        function tick() {
+            if (isPaused) return;
+            
+            remainingSeconds--;
+            updateCountdownUI();
+
+            if (remainingSeconds <= 0) {
+                clearInterval(countdownInterval);
+                if (currentView === 'timer') {
+                    timeUpOverlay.style.display = 'block';
+                }
+                statusLabel.innerText = "หมดเวลา!";
+            }
+        }
+
+        function togglePause() {
+            if (remainingSeconds <= 0) return;
+            
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseBtn.innerText = "ทำต่อ";
+                statusLabel.innerText = "หยุดชั่วคราว";
+            } else {
+                pauseBtn.innerText = "หยุดชั่วคราว";
+                statusLabel.innerText = "จับเวลา";
+            }
+        }
+
+        function restartCountdown() {
+            if (totalSeconds <= 0) return;
+            clearInterval(countdownInterval);
+            remainingSeconds = totalSeconds;
+            isPaused = false;
+            pauseBtn.innerText = "หยุดชั่วคราว";
+            statusLabel.innerText = "จับเวลา";
+            timeUpOverlay.style.display = 'none';
+            updateCountdownUI();
+            countdownInterval = setInterval(tick, 1000);
+        }
+
+        function stopCountdown() {
+            clearInterval(countdownInterval);
+            runningView.style.display = 'none';
+            setupView.style.display = 'flex';
+            timeUpOverlay.style.display = 'none';
+        }
+
+        const tracks = [
+            { name: "Chill", file: "Chill.mp3" },
+            { name: "Kahoot", file: "Kahoot.mp3" },
+            { name: "Mario Song", file: "Mario_Song.mp3" },
+            { name: "Mission Impossible", file: "Mission_Impossible.mp3" },
+            { name: "Conan", file: "Conan.mp3" }
+        ];
+        
+        let currentTrack = 0;
+        const bgMusic = new Audio(tracks[currentTrack].file);
+        bgMusic.loop = true;
+        bgMusic.volume = 0.3;
+
+        const musicPlayer = document.getElementById('musicPlayer');
+        const trackInfo = document.getElementById('trackInfo');
+        const playlistElement = document.getElementById('playlist');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const trackNameDisplay = document.getElementById('trackName');
+
+        function createPlaylist() {
+            tracks.forEach((track, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fa-solid fa-play"></i> ${track.name}`;
+                if (index === currentTrack) {
+                    li.classList.add('active');
+                }
+                li.addEventListener('click', () => {
+                    playTrack(index);
+                    musicPlayer.classList.remove('show-playlist'); 
+                });
+                playlistElement.appendChild(li);
+            });
+        }
+
+        function updatePlaylistActive() {
+            const playlistItems = playlistElement.querySelectorAll('li');
+            playlistItems.forEach((item, index) => {
+                if (index === currentTrack) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        function playTrack(index) {
+            currentTrack = index;
+            bgMusic.src = tracks[currentTrack].file;
+            trackNameDisplay.innerText = tracks[currentTrack].name;
+            bgMusic.play()
+                .then(() => {
+                    playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                })
+                .catch(error => console.log("Playback failed:", error));
+            updatePlaylistActive();
+        }
+
+        function togglePlay() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            } else {
+                bgMusic.pause();
+                playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+            }
+        }
+
+        function playNext() {
+            currentTrack = (currentTrack + 1) % tracks.length;
+            playTrack(currentTrack);
+        }
+
+        trackInfo.addEventListener('click', () => {
+            musicPlayer.classList.toggle('show-playlist');
+        });
+
+        playPauseBtn.addEventListener('click', togglePlay);
+        nextBtn.addEventListener('click', playNext);
+        volumeSlider.addEventListener('input', (e) => {
+            bgMusic.volume = e.target.value;
+        });
+
+        createPlaylist();
+        trackNameDisplay.innerText = tracks[currentTrack].name;
     </script>
 
 </body>
