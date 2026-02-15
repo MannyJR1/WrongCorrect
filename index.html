@@ -11,9 +11,7 @@
             margin: 0;
             font-family: 'Itim', sans-serif;
             background-image: url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-size: 150% 150%;
             background-repeat: no-repeat;
             animation: glowingAurora 25s infinite alternate ease-in-out;
             color: white;
@@ -22,9 +20,9 @@
             overflow-y: auto;
         }
         @keyframes glowingAurora {
-            0% { filter: hue-rotate(0deg) brightness(1); }
+            0% { background-position: 0% 50%; filter: hue-rotate(0deg) brightness(1); }
             50% { filter: hue-rotate(20deg) brightness(1.2); }
-            100% { filter: hue-rotate(-10deg) brightness(0.9); }
+            100% { background-position: 100% 50%; filter: hue-rotate(-10deg) brightness(0.9); }
         }
         .nav-btn {
             position: fixed;
@@ -632,8 +630,6 @@
         <div id="overlayIcon"></div>
     </div>
     
-    <div class="time-up-overlay" id="timeUpOverlay"></div>
-
     <div id="gameSection" class="section-view">
         <h1 class="title">
             <div class="title-top">
@@ -657,6 +653,7 @@
     </div>
 
     <div id="timerSection" class="section-view">
+        <div class="time-up-overlay" id="timeUpOverlay"></div>
         <div class="timer-card">
             
             <div id="timerSetupView">
