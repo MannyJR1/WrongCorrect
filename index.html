@@ -173,6 +173,23 @@
         .overlay.active-wrong #overlayIcon,
         .overlay.active-correct #overlayIcon { transform: scale(1); }
 
+        .time-up-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(231, 76, 60, 0.4);
+            z-index: 9998;
+            pointer-events: none;
+            display: none;
+            animation: flash 1s infinite alternate;
+        }
+        @keyframes flash {
+            from { opacity: 0.3; }
+            to { opacity: 0.8; }
+        }
+
         .timer-card {
             background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(20px);
@@ -367,21 +384,6 @@
         .btn-stop { border-bottom: 3px solid #e74c3c; }
         .btn-stop:hover { background: rgba(231, 76, 60, 0.2); }
         .timer-btn:active { transform: scale(0.95); }
-
-        .time-up-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(231, 76, 60, 0.4);
-            z-index: 9998;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-            animation: flash 1s infinite alternate;
-            display: none;
-        }
 
         .music-player {
             position: fixed;
@@ -630,6 +632,8 @@
         <div id="overlayIcon"></div>
     </div>
     
+    <div class="time-up-overlay" id="timeUpOverlay"></div>
+
     <div id="gameSection" class="section-view">
         <h1 class="title">
             <div class="title-top">
@@ -653,7 +657,6 @@
     </div>
 
     <div id="timerSection" class="section-view">
-        <div class="time-up-overlay" id="timeUpOverlay"></div>
         <div class="timer-card">
             
             <div id="timerSetupView">
@@ -730,6 +733,8 @@
         const gameSection = document.getElementById('gameSection');
         const timerSection = document.getElementById('timerSection');
         const navBtn = document.getElementById('navBtn');
+        const timeUpOverlay = document.getElementById('timeUpOverlay');
+        const runningView = document.getElementById('timerRunningView');
         let currentView = 'game';
 
         navBtn.addEventListener('click', () => {
@@ -738,11 +743,16 @@
                 timerSection.style.display = 'flex';
                 navBtn.innerHTML = '<i class="fa-solid fa-gamepad"></i> กลับหน้าเกม';
                 currentView = 'timer';
+                
+                if (remainingSeconds <= 0 && totalSeconds > 0 && runningView.style.display === 'flex') {
+                    timeUpOverlay.style.display = 'block';
+                }
             } else {
                 gameSection.style.display = 'flex';
                 timerSection.style.display = 'none';
                 navBtn.innerHTML = '<i class="fa-solid fa-stopwatch"></i> ไปหน้าจับเวลา';
                 currentView = 'game';
+                timeUpOverlay.style.display = 'none';
             }
         });
 
@@ -800,14 +810,12 @@
         const circumference = 879.64; 
 
         const setupView = document.getElementById('timerSetupView');
-        const runningView = document.getElementById('timerRunningView');
         const circleProgress = document.getElementById('circleProgress');
         const countdownDisplay = document.getElementById('countdownDisplay');
         const linearProgress = document.getElementById('linearProgress');
         const percentText = document.getElementById('percentText');
         const pauseBtn = document.getElementById('pauseBtn');
         const statusLabel = document.getElementById('timerStatusLabel');
-        const timeUpOverlay = document.getElementById('timeUpOverlay');
 
         function startCountdown() {
             const h = parseInt(document.getElementById('inputHours').value) || 0;
@@ -863,10 +871,10 @@
 
             if (remainingSeconds <= 0) {
                 clearInterval(countdownInterval);
+                statusLabel.innerText = "หมดเวลา!";
                 if (currentView === 'timer') {
                     timeUpOverlay.style.display = 'block';
                 }
-                statusLabel.innerText = "หมดเวลา!";
             }
         }
 
@@ -900,6 +908,7 @@
             runningView.style.display = 'none';
             setupView.style.display = 'flex';
             timeUpOverlay.style.display = 'none';
+            totalSeconds = 0;
         }
 
         const tracks = [
