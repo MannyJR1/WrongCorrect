@@ -11,7 +11,9 @@
             margin: 0;
             font-family: 'Itim', sans-serif;
             background-image: url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-            background-size: 150% 150%;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             background-repeat: no-repeat;
             animation: glowingAurora 25s infinite alternate ease-in-out;
             color: white;
@@ -20,9 +22,9 @@
             overflow-y: auto;
         }
         @keyframes glowingAurora {
-            0% { background-position: 0% 50%; filter: hue-rotate(0deg) brightness(1); }
+            0% { filter: hue-rotate(0deg) brightness(1); }
             50% { filter: hue-rotate(20deg) brightness(1.2); }
-            100% { background-position: 100% 50%; filter: hue-rotate(-10deg) brightness(0.9); }
+            100% { filter: hue-rotate(-10deg) brightness(0.9); }
         }
         .nav-btn {
             position: fixed;
@@ -508,6 +510,11 @@
             font-size: 28px; 
             color: white;
         }
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         #volumeSlider {
             -webkit-appearance: none;
             width: 80px;
@@ -608,6 +615,12 @@
             }
             #overlayIcon {
                 font-size: 200px;
+            }
+            .volume-container {
+                display: none;
+            }
+            .player-controls {
+                justify-content: center;
             }
         }
 
@@ -719,7 +732,7 @@
                 <button id="playPauseBtn" class="music-btn"><i class="fa-solid fa-play"></i></button>
                 <button id="nextBtn" class="music-btn"><i class="fa-solid fa-forward-step"></i></button>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="volume-container">
                 <i class="fa-solid fa-volume-high" style="font-size: 14px; color: rgba(255,255,255,0.6);"></i>
                 <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.3">
             </div>
